@@ -1,0 +1,39 @@
+.persons {
+  padding: 2rem;
+}
+
+.personCard {
+  background-color: rgb(35, 78, 92);
+  color: white;
+  border-top-left-radius: 60px;
+  border-bottom-right-radius: 60px;
+  margin: 1rem;
+  width: 30%;
+  min-height: 200px;
+  position: relative;
+}
+
+.personCard:hover {
+  background-color: darkgreen;
+}
+
+.personCard button {
+  margin-right: 0.5rem;
+}
+
+.boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 2rem;
+}
+
+input {
+  padding: 1rem;
+  font-family: inherit;
+  font-size: inherit;
+  border-radius: 5px;
+  border: none;
+  margin: 1rem;
+}
