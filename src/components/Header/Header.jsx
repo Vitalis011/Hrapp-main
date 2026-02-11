@@ -1,4 +1,4 @@
-import {NavLink, Link} from 'react-router';
+import {NavLink, Link} from 'react-router-dom';
 import styles from './Header.module.css';
 
 const Header = ({name}) => {
