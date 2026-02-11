@@ -1,30 +1,47 @@
-import React, {useState} from "react";
-import { BrowserRouter, Routes, Route, } from "react-router-dom";
-import {persons} from "./data/personsData";
+import axios from 'axios';
+import {useEffect, useState} from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './App.css';
-import Root from './pages/Root';
-import About from './pages/About';
 import PersonList from './components/Persons/PersonList';
+import About from './pages/About';
 import AddEmployee from './pages/AddEmployee';
+import Root from './pages/Root';
 
 const App = () => {
-  const [personsData, setPersonsData] = useState(persons);
+  const [personsData, setPersonsData] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/employees").then((res) => {
+      setPersonsData(res.data);
+    });
+  }, []);
 
   const addEmployeeHandler = (newPerson) => {
     setPersonsData((prev) => [...prev, {...newPerson, id: Date.now()},]);
   };
 
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Root />,
+      children: [
+        {
+          index: true,
+          element: <PersonList personsData={personsData} setPersonsData={setPersonsData} />,
+        },
+        {
+          path: "about",
+          element: <About />,
+        },
+        {
+          path: "add",
+          element: <AddEmployee onAddEmployee={addEmployeeHandler} />,
+        },
+      ],
+    },
+  ]);
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Root />}>
-        <Route index element={<PersonList personsData={personsData} setPersonsData={setPersonsData}/>}/>
-        <Route path="about" element={<About />} />
-        <Route path="persons" element={<PersonList personsData={personsData} setPersonsData={setPersonsData} />} />
-        <Route path="add" element={<AddEmployee onAddEmployee={addEmployeeHandler} />} />
-        </Route></Routes></BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
