@@ -1,23 +1,30 @@
-import Header from './Header';
-import Person from './Person';
-import Footer from './Footer';
-import './App.css'
+import React, {useState} from "react";
+import { BrowserRouter, Routes, Route, } from "react-router-dom";
+import {persons} from "./data/personsData";
+import './App.css';
+import Root from './pages/Root';
+import About from './pages/About';
+import PersonList from './components/Persons/PersonList';
+import AddEmployee from './pages/AddEmployee';
 
-function App() {
+const App = () => {
+  const [personsData, setPersonsData] = useState(persons);
+
+  const addEmployeeHandler = (newPerson) => {
+    setPersonsData((prev) => [...prev, {...newPerson, id: Date.now()},]);
+  };
+
 
   return (
-   <div>
-    <Header />
-    <main>
-      <Person name="Alice" title="CEO" salary={6000} phone="0502350934" email="ceo@best.com" animal="Whale" />
-      <Person name="Jason" title="CFO" salary={5500} phone="0403849832" email="cfo@best.com" animal="Tiger" />
-      <Person name="Mary" title="Secretary" salary={3000} phone="0459393939" email="sec@best.com" animal="Pig" />
-      <Person name="Mei" title="Advisor" salary={4800} phone="0403934843" email="advice@best.com" animal="Cat" />
-      <Person name="Jay" title="Senior Developer" salary={5400} phone="0449933333" email="juha@best.com" animal="Dog" />
-    </main>
-    <Footer />
-   </div>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Root />}>
+        <Route index element={<PersonList personsData={personsData} setPersonsData={setPersonsData}/>}/>
+        <Route path="about" element={<About />} />
+        <Route path="persons" element={<PersonList personsData={personsData} setPersonsData={setPersonsData} />} />
+        <Route path="add" element={<AddEmployee onAddEmployee={addEmployeeHandler} />} />
+        </Route></Routes></BrowserRouter>
+  );
+};
 
-export default App
+export default App;
