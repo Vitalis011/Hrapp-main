@@ -37,3 +37,9 @@ input {
   border: none;
   margin: 1rem;
 }
+
+.confirmation {
+  color: green;
+  font-weight: bold;
+  margin-top: 5px;
+}

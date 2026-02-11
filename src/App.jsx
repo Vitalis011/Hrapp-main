@@ -2,9 +2,9 @@ import axios from 'axios';
 import {useEffect, useState} from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './App.css';
-import PersonList from './components/Persons/PersonList';
+import PersonList from './pages/Persons/PersonList';
 import About from './pages/About';
-import AddEmployee from './pages/AddEmployee';
+import AddEmployee from './pages/AddEmployee/AddEmployee';
 import Root from './pages/Root';
 
 const App = () => {
