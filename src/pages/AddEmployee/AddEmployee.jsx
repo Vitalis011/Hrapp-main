@@ -1,7 +1,6 @@
+import axios from "axios";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header/Header';
-import Footer from '../components/Footer/Footer';
 import "./AddEmployee.css";
 
 const AddEmployee = ({onAddEmployee}) => {
@@ -29,11 +28,14 @@ const AddEmployee = ({onAddEmployee}) => {
         e.preventDefault();
 
         const newEmployee = {...formData, id: Date.now(),skills: formData.skills.split(",") };
+        axios.post("http://localhost:3001/employees", newEmployee).then((res) => {
+            console.log(res);
+        });
 
         onAddEmployee(newEmployee);
+        navigate("/");
 
-        navigate("/persons");
-        setFormData({ name: "", title: "", salary: "", phone: "", email: "", animal: "", startDate: "", location: "", department: "", skills: ""})
+        setFormData({ name: "", title: "", salary: "", phone: "", email: "", animal: "", startDate: "", location: "", department: "", skills: ""});
     };
 
     return (
