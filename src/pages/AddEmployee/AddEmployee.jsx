@@ -1,9 +1,10 @@
-import axios from "axios";
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import "./AddEmployee.css";
+import { useNavigate } from 'react-router';
+import useAxios from "./../../hooks/useAxios";
+import styles from "./AddEmployee.module.css";
 
 const AddEmployee = ({onAddEmployee}) => {
+    const {post} = useAxios();
     const [formData, setFormData] = useState({
         name: "",
         title: "",
@@ -11,7 +12,7 @@ const AddEmployee = ({onAddEmployee}) => {
         phone: "",
         email: "",
         animal: "",
-        startDate: "2010-02-01",
+        startDate: "",
         location: "",
         department: "",
         skills: "",
@@ -24,35 +25,46 @@ const AddEmployee = ({onAddEmployee}) => {
         setFormData((prev) => ({...prev, [name]: value}));
     }
 
-    const handleSubmit = (e) => {
+    const API_URL = import.meta.env.VITE_API_URL;
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const newEmployee = {...formData, id: Date.now(),skills: formData.skills.split(",") };
-        axios.post("http://localhost:3001/employees", newEmployee).then((res) => {
-            console.log(res);
-        });
+        const newEmployee = {...formData, salary: parseFloat(formData.salary), skills: formData.skills.split(",").map(s => s.trim()).filter(Boolean) };
 
-        onAddEmployee(newEmployee);
-        navigate("/");
-
-        setFormData({ name: "", title: "", salary: "", phone: "", email: "", animal: "", startDate: "", location: "", department: "", skills: ""});
+        try {
+            const res = await post(`${API_URL}/employees`, newEmployee);
+            onAddEmployee(res.data);
+            navigate("/");
+        } catch (err) {
+            console.error("Failed to add employee:", err);
+        }
     };
 
     return (
         <>
         <h1>Add a new employee</h1>
-        <form onSubmit={handleSubmit}>
-           <input type="text" placeholder="Name" value={formData.name} onChange={handleChange} name="name" />
-           <input type="text" placeholder="Title" value={formData.title} onChange={handleChange} name="title" />
-           <input type="number" placeholder="Salary" value={formData.salary} onChange={handleChange} name="salary" />
-           <input type="tel" placeholder="Phone number" value={formData.phone} onChange={handleChange} name="phone" />
-           <input type="email" placeholder="Email" value={formData.email} onChange={handleChange} name="email" />
-           <input type="text" placeholder="Animal" value={formData.animal} onChange={handleChange} name="animal" />
-           <input type="date" placeholder="Start date" value={formData.startDate} onChange={handleChange} name="startDate" />
-           <input type="text" placeholder="Location" value={formData.location} onChange={handleChange} name="location"/>
-           <input type="text" placeholder="Department" value={formData.department} onChange={handleChange} name="department" />
-           <input type="text" placeholder="Skills" value={formData.skills} onChange={handleChange} name="skills" />
-           <button type="submit">Add Employee</button>
+        <form onSubmit={handleSubmit} className={styles.form}>
+           <input className={styles.input} type="text" placeholder="Name" value={formData.name} onChange={handleChange} name="name" />
+           <input className={styles.input} type="text" placeholder="Title" value={formData.title} onChange={handleChange} name="title" />
+           <input className={styles.input} type="number" placeholder="Salary" value={formData.salary} onChange={handleChange} name="salary" />
+           <input className={styles.input} type="tel" placeholder="Phone number" value={formData.phone} onChange={handleChange} name="phone" />
+           <input className={styles.input} type="email" placeholder="Email" value={formData.email} onChange={handleChange} name="email" />
+           <input className={styles.input} type="text" placeholder="Favorite animal" value={formData.animal} onChange={handleChange} name="animal" />
+    
+           <input 
+           className={styles.input}
+           type="date" 
+           placeholder="YYYY-MM-DD" 
+           value={formData.startDate} 
+           onFocus={(e) => e.target.type = "date"}
+           onBlur={(e) => {
+            if (!e.target.value) e.target.type = "text";}}
+            onChange={handleChange} name="startDate" />
+           <input className={styles.input} type="text" placeholder="Location" value={formData.location} onChange={handleChange} name="location"/>
+           <input className={styles.input} type="text" placeholder="Department" value={formData.department} onChange={handleChange} name="department" />
+           <input className={styles.input} type="text" placeholder="Skills" value={formData.skills} onChange={handleChange} name="skills" />
+           <button className={styles.submitButton} type="submit">Add Employee</button>
         </form>
         </>
     )

@@ -1,19 +1,28 @@
 import {NavLink, Link} from 'react-router';
-import './Header.css';
+import styles from './Header.module.css';
 
 const Header = ({name}) => {
     return (
-        <header>
+        <header className={styles.header}>
             <div className="logo">
-                <Link to="/">
-                <h2>{name}</h2>
+                <Link to="/" className={styles.logoLink}>
+                <h2 className={styles.logoText}>{name}</h2>
                 </Link>
             </div>
             <nav>
                 <ul>
-                    <NavLink to="/">Person list</NavLink>
-                    <NavLink to="/add">Add employee</NavLink>
-                    <NavLink to="/about">About</NavLink>
+                    <li className={styles.navListItem}>
+                    <NavLink to="/" className={({isActive}) =>
+                    isActive ? `${styles.link} ${styles.active}` : styles.link} end>Person list</NavLink>
+                    </li>
+                    <li className={styles.navListItem}>
+                    <NavLink to="/add" className={({isActive}) => isActive ? `${styles.link} ${styles.active}` : styles.link}>Add employee</NavLink>
+                    </li>
+                    <li className={styles.navListItem}>
+                    <NavLink to="/about" className={({isActive}) =>
+                    isActive ? `${styles.link} ${styles.active}` :
+                    styles.link}>About</NavLink>
+                    </li>
                 </ul>
             </nav>
         </header>
